@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Moon, Droplets, Baby, Ruler, BookOpen, Timer, X, Plus, Minus } from "lucide-react"
+import { Moon, Droplets, Baby, Ruler, BookOpen, Timer, X, Plus, Minus, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,6 +15,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Switch } from "@/components/ui/switch"
+import { AddChildDialog } from "@/components/add-child-dialog"
+import { useLogs } from "@/lib/logs-context"
+import { useAuth } from "@/lib/auth-context"
 
 type LogType = "feeding" | "sleep" | "play" | "growth" | "diary"
 
@@ -34,16 +37,12 @@ const logOptions: LogOption[] = [
   { type: "diary", label: "Diary", icon: BookOpen, color: "text-chart-5", bgColor: "bg-chart-5/10" },
 ]
 
-interface LogDrawerProps {
-  onLog?: (type: LogType, data: Record<string, unknown>) => void
-}
-
-export function LogDrawer({ onLog }: LogDrawerProps) {
+export function LogDrawer() {
+  const { user } = useAuth()
+  const { addLog } = useLogs()
   const [open, setOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<LogType | null>(null)
   const [feedingAmount, setFeedingAmount] = useState(120)
-  const [feedingTimer, setFeedingTimer] = useState(0)
-  const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [sleepStart, setSleepStart] = useState("")
   const [sleepEnd, setSleepEnd] = useState("")
   const [presenceMode, setPresenceMode] = useState(false)
@@ -54,15 +53,14 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
 
   const availableTags = ["Health", "Milestone", "Appointment", "Behavior", "Memory"]
 
-  const handleSave = () => {
-    if (!selectedType) return
+  const handleSave = async () => {
+    if (!selectedType || !user) return
 
-    const data: Record<string, unknown> = { type: selectedType, timestamp: new Date().toISOString() }
+    const data: Record<string, unknown> = {}
 
     switch (selectedType) {
       case "feeding":
         data.amount = feedingAmount
-        data.duration = feedingTimer
         break
       case "sleep":
         data.startTime = sleepStart
@@ -72,8 +70,8 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
         data.presenceMode = presenceMode
         break
       case "growth":
-        data.weight = weight
-        data.height = height
+        data.weight = weight ? parseFloat(weight) : 0
+        data.height = height ? parseFloat(height) : 0
         break
       case "diary":
         data.note = diaryNote
@@ -81,7 +79,7 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
         break
     }
 
-    onLog?.(selectedType, data)
+    await addLog(selectedType, data)
     setSelectedType(null)
     setOpen(false)
   }
@@ -90,46 +88,28 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
     switch (selectedType) {
       case "feeding":
         return (
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <Label className="text-sm text-muted-foreground">Amount (ml)</Label>
-              <div className="flex items-center justify-center gap-4">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-12 w-12 rounded-full"
-                  onClick={() => setFeedingAmount(Math.max(0, feedingAmount - 10))}
-                >
-                  <Minus className="w-5 h-5" />
-                </Button>
-                <div className="text-4xl font-light text-foreground w-24 text-center">
-                  {feedingAmount}
-                </div>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-12 w-12 rounded-full"
-                  onClick={() => setFeedingAmount(feedingAmount + 10)}
-                >
-                  <Plus className="w-5 h-5" />
-                </Button>
+          <div className="space-y-3">
+            <Label className="text-sm text-muted-foreground">Amount (ml)</Label>
+            <div className="flex items-center justify-center gap-4">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-12 w-12 rounded-full"
+                onClick={() => setFeedingAmount(Math.max(0, feedingAmount - 10))}
+              >
+                <Minus className="w-5 h-5" />
+              </Button>
+              <div className="text-4xl font-light text-foreground w-24 text-center">
+                {feedingAmount}
               </div>
-            </div>
-            <div className="space-y-3">
-              <Label className="text-sm text-muted-foreground">Timer</Label>
-              <div className="flex items-center justify-center gap-4">
-                <div className="text-3xl font-light text-foreground">
-                  {Math.floor(feedingTimer / 60)}:{(feedingTimer % 60).toString().padStart(2, "0")}
-                </div>
-                <Button
-                  variant={isTimerRunning ? "destructive" : "secondary"}
-                  size="sm"
-                  onClick={() => setIsTimerRunning(!isTimerRunning)}
-                >
-                  <Timer className="w-4 h-4 mr-2" />
-                  {isTimerRunning ? "Stop" : "Start"}
-                </Button>
-              </div>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-12 w-12 rounded-full"
+                onClick={() => setFeedingAmount(feedingAmount + 10)}
+              >
+                <Plus className="w-5 h-5" />
+              </Button>
             </div>
           </div>
         )
@@ -160,22 +140,15 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
 
       case "play":
         return (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 rounded-2xl bg-secondary">
-              <div>
-                <p className="text-sm font-medium text-foreground">Presence Mode</p>
-                <p className="text-xs text-muted-foreground">Start a focused play session</p>
-              </div>
-              <Switch
-                checked={presenceMode}
-                onCheckedChange={setPresenceMode}
-              />
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-secondary">
+            <div>
+              <p className="text-sm font-medium text-foreground">Presence Mode</p>
+              <p className="text-xs text-muted-foreground">Start a focused play session</p>
             </div>
-            {presenceMode && (
-              <p className="text-sm text-center text-muted-foreground">
-                Tap save to start a 15-minute presence session
-              </p>
-            )}
+            <Switch
+              checked={presenceMode}
+              onCheckedChange={setPresenceMode}
+            />
           </div>
         )
 
@@ -252,6 +225,10 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
     }
   }
 
+  if (!user) {
+    return null
+  }
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
@@ -267,7 +244,7 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
         <div className="mx-auto w-full max-w-md">
           <DrawerHeader className="relative">
             <DrawerTitle className="text-center text-foreground">
-              {selectedType ? logOptions.find(o => o.type === selectedType)?.label : "Log Activity"}
+              {selectedType ? logOptions.find((o) => o.type === selectedType)?.label : "Log Activity"}
             </DrawerTitle>
             {selectedType && (
               <button
@@ -285,21 +262,26 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
 
           <div className="p-4 pb-8">
             {!selectedType ? (
-              <div className="grid grid-cols-3 gap-3">
-                {logOptions.map((option) => {
-                  const Icon = option.icon
-                  return (
-                    <button
-                      key={option.type}
-                      type="button"
-                      onClick={() => setSelectedType(option.type)}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl ${option.bgColor} hover:opacity-80 transition-opacity`}
-                    >
-                      <Icon className={`w-6 h-6 ${option.color}`} />
-                      <span className="text-xs font-medium text-foreground">{option.label}</span>
-                    </button>
-                  )
-                })}
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {logOptions.map((option) => {
+                    const Icon = option.icon
+                    return (
+                      <button
+                        key={option.type}
+                        type="button"
+                        onClick={() => setSelectedType(option.type)}
+                        className={`flex flex-col items-center gap-2 p-4 rounded-2xl ${option.bgColor} hover:opacity-80 transition-opacity`}
+                      >
+                        <Icon className={`w-6 h-6 ${option.color}`} />
+                        <span className="text-xs font-medium text-foreground">{option.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="pt-2 border-t border-border">
+                  <AddChildDialog />
+                </div>
               </div>
             ) : (
               <div className="space-y-6">
@@ -318,3 +300,4 @@ export function LogDrawer({ onLog }: LogDrawerProps) {
     </Drawer>
   )
 }
+

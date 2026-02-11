@@ -27,9 +27,10 @@ interface GrowthChartProps {
   data: GrowthDataPoint[]
   currentWeight?: number
   currentHeight?: number
+  currentWeightPercentile?: number
 }
 
-export function GrowthChart({ data, currentWeight, currentHeight }: GrowthChartProps) {
+export function GrowthChart({ data, currentWeight, currentHeight, currentWeightPercentile }: GrowthChartProps) {
   const [activeMetric, setActiveMetric] = useState<"weight" | "height">("weight")
 
   const chartConfig = {
@@ -99,7 +100,7 @@ export function GrowthChart({ data, currentWeight, currentHeight }: GrowthChartP
               <span className="text-xs text-muted-foreground">Percentile</span>
             </div>
             <p className="text-xl font-semibold text-foreground mt-1">
-              75<span className="text-sm font-normal text-muted-foreground ml-1">th</span>
+              {currentWeightPercentile ?? "-"}<span className="text-sm font-normal text-muted-foreground ml-1">th</span>
             </p>
           </div>
         </div>
