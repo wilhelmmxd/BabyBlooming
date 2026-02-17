@@ -1,4 +1,5 @@
 import cdcGrowthData from "./cdc-growth-data.json"
+import cdcLengthData from "./cdc-length-growth-data.json"
 
 /**
  * Standard normal cumulative distribution function (CDF)
@@ -49,12 +50,23 @@ interface LMSData {
   S: number
 }
 
+interface LMSDataset {
+  data: {
+    male: LMSData[]
+    female: LMSData[]
+  }
+}
+
 /**
  * Find the LMS parameters for a given age
  * If exact age not found, interpolates between closest ages
  */
-function findLMSForAge(ageMonths: number, sex: "male" | "female"): LMSData | null {
-  const data = sex === "male" ? cdcGrowthData.data.male : cdcGrowthData.data.female
+function findLMSForAge(
+  dataset: LMSDataset,
+  ageMonths: number,
+  sex: "male" | "female"
+): LMSData | null {
+  const data = sex === "male" ? dataset.data.male : dataset.data.female
   
   // Find exact match or closest match
   let exact = data.find((d) => d.ageMonths === ageMonths)
@@ -95,7 +107,7 @@ export function calculateWeightPercentile(
   ageMonths: number,
   sex: "male" | "female" = "male"
 ): number {
-  const lms = findLMSForAge(ageMonths, sex)
+  const lms = findLMSForAge(cdcGrowthData as LMSDataset, ageMonths, sex)
   if (!lms) return 0
 
   const z = calculateZScore(weightKg, lms.L, lms.M, lms.S)
@@ -106,7 +118,7 @@ export function calculateWeightPercentile(
  * Get the expected median weight for an age
  */
 export function getMedianWeightForAge(ageMonths: number, sex: "male" | "female" = "male"): number {
-  const lms = findLMSForAge(ageMonths, sex)
+  const lms = findLMSForAge(cdcGrowthData as LMSDataset, ageMonths, sex)
   return lms?.M ?? 0
 }
 
@@ -119,7 +131,7 @@ export function getWeightRangeForAge(
   percentileHigh: number,
   sex: "male" | "female" = "male"
 ): { low: number; high: number } {
-  const lms = findLMSForAge(ageMonths, sex)
+  const lms = findLMSForAge(cdcGrowthData as LMSDataset, ageMonths, sex)
   if (!lms) return { low: 0, high: 0 }
 
   // Reverse the z-score formula to find weight from percentile:
@@ -137,6 +149,25 @@ export function getWeightRangeForAge(
     low: getWeightFromPercentile(percentileLow),
     high: getWeightFromPercentile(percentileHigh),
   }
+}
+
+/**
+ * Calculate height (length) percentile for a child
+ * @param heightCm - Length/height in centimeters
+ * @param ageMonths - Age in months
+ * @param sex - "male" or "female"
+ * @returns Percentile (0-100)
+ */
+export function calculateHeightPercentile(
+  heightCm: number,
+  ageMonths: number,
+  sex: "male" | "female" = "male"
+): number {
+  const lms = findLMSForAge(cdcLengthData as LMSDataset, ageMonths, sex)
+  if (!lms) return 0
+
+  const z = calculateZScore(heightCm, lms.L, lms.M, lms.S)
+  return zScoreToPercentile(z)
 }
 
 /**

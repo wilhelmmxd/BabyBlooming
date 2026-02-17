@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useChildren } from "@/lib/children-context"
+import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
   DialogContent,
@@ -13,10 +14,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus } from "lucide-react"
+import { Plus, AlertCircle } from "lucide-react"
 
 export function AddChildDialog() {
   const { addChild } = useChildren()
+  const { toast } = useToast()
   const [childName, setChildName] = useState("")
   const [birthDate, setBirthDate] = useState("")
   const [sex, setSex] = useState<"male" | "female" | "">("")
@@ -26,8 +28,37 @@ export function AddChildDialog() {
 
   const handleAddChild = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validation
     if (!childName.trim()) {
       setError("Please enter your child's name")
+      toast({
+        title: "Validation Error",
+        description: "Please enter your child's name",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Validate birth date format if provided
+    if (birthDate && isNaN(new Date(birthDate).getTime())) {
+      setError("Please enter a valid birth date")
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid birth date",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Ensure birth date is not in the future
+    if (birthDate && new Date(birthDate) > new Date()) {
+      setError("Birth date cannot be in the future")
+      toast({
+        title: "Validation Error",
+        description: "Birth date cannot be in the future",
+        variant: "destructive",
+      })
       return
     }
 
@@ -44,8 +75,19 @@ export function AddChildDialog() {
       setChildName("")
       setBirthDate("")
       setSex("")
+      toast({
+        title: "Success",
+        description: "Child profile created successfully",
+      })
     } catch (err) {
-      setError((err as Error).message || "Failed to add child")
+      const errorMessage = (err as Error).message || "Failed to add child"
+      setError(errorMessage)
+      console.error("Error adding child:", err)
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -54,9 +96,9 @@ export function AddChildDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="secondary" 
-          size="sm" 
+        <Button
+          variant="secondary"
+          size="sm"
           className="h-9 gap-2"
         >
           <Plus className="w-4 h-4" />
@@ -126,7 +168,12 @@ export function AddChildDialog() {
             </div>
           </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <div className="flex gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+              <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
 
           <div className="flex gap-3">
             <Button

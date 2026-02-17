@@ -11,6 +11,7 @@ import {
   doc,
   Timestamp,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore'
 import { db } from './firebase'
 import { useAuth } from './auth-context'
@@ -29,8 +30,9 @@ interface ChildrenContextType {
   loading: boolean
   activeChild: Child | null
   setActiveChild: (child: Child) => void
-  addChild: (name: string, birthDate?: string) => Promise<void>
+  addChild: (name: string, birthDate?: string, sex?: "male" | "female") => Promise<void>
   deleteChild: (childId: string) => Promise<void>
+  editChild: (childId: string, updates: Partial<Omit<Child, "id">>) => Promise<void>
 }
 
 const ChildrenContext = createContext<ChildrenContextType | undefined>(undefined)
@@ -65,7 +67,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
           createdAt: doc.data().createdAt?.toDate?.().toISOString() || new Date().toISOString(),
         }))
         setChildren(fetchedChildren)
-        
+
         // Set active child to first one if not already set
         if (fetchedChildren.length > 0 && !activeChild) {
           setActiveChild(fetchedChildren[0])
@@ -73,7 +75,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
           // If active child was deleted, switch to first available
           setActiveChild(fetchedChildren[0] || null)
         }
-        
+
         setLoading(false)
       },
       (err) => {
@@ -98,7 +100,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
           sex: sex || null,
           createdAt: Timestamp.now(),
         })
-        
+
         // Set as active child if it's the first one
         if (children.length === 0) {
           setActiveChild({
@@ -132,8 +134,33 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
     [user, activeChild, children]
   )
 
+  const editChild = useCallback(
+    async (childId: string, updates: Partial<Omit<Child, "id">>) => {
+      if (!user) return
+
+      try {
+        const childRef = doc(db, "children", childId)
+        await updateDoc(childRef, updates)
+      } catch (err) {
+        console.error("Failed to edit child:", err)
+        throw err
+      }
+    },
+    [user]
+  )
+
   return (
-    <ChildrenContext.Provider value={{ children, loading, activeChild, setActiveChild, addChild, deleteChild }}>
+    <ChildrenContext.Provider
+      value={{
+        children,
+        loading,
+        activeChild,
+        setActiveChild,
+        addChild,
+        deleteChild,
+        editChild,
+      }}
+    >
       {childrenComponents}
     </ChildrenContext.Provider>
   )

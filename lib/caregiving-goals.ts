@@ -104,10 +104,15 @@ export function getAgeInMonths(birthDateString: string | undefined): number {
   if (!birthDateString) return 0
 
   const birthDate = new Date(birthDateString)
+  if (Number.isNaN(birthDate.getTime())) return 0
   const today = new Date()
 
   let months = (today.getFullYear() - birthDate.getFullYear()) * 12
   months += today.getMonth() - birthDate.getMonth()
+
+  if (today.getDate() < birthDate.getDate()) {
+    months -= 1
+  }
 
   return Math.max(0, months)
 }
