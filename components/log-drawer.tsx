@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/drawer"
 import { Switch } from "@/components/ui/switch"
 import { AddChildDialog } from "@/components/add-child-dialog"
+import { FloatingActionMenu } from "@/components/floating-action-menu"
 import { useLogs } from "@/lib/logs-context"
 import { useAuth } from "@/lib/auth-context"
 import { useToast } from "@/hooks/use-toast"
@@ -48,6 +49,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
   const { addLog, updateLog } = useLogs()
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<LogType | null>(initialLog?.type ?? null)
   const [feedingAmount, setFeedingAmount] = useState(120)
   const [sleepStart, setSleepStart] = useState("")
@@ -95,6 +97,12 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
 
     resetForm()
   }, [open, initialLog])
+
+  useEffect(() => {
+    if (open) {
+      setMenuOpen(false)
+    }
+  }, [open])
 
   const handleSave = async () => {
     if (!activeType || !user) return
@@ -343,22 +351,40 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
     return null
   }
 
-  const triggerContent = trigger ?? (
-    <Button
-      size="icon"
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:scale-105 transition-all z-50"
-    >
-      <Plus className="w-6 h-6" />
-      <span className="sr-only">Add log entry</span>
-    </Button>
-  )
+  const handleActionSelect = (type: LogType) => {
+    setSelectedType(type)
+    setOpen(true)
+    setMenuOpen(false)
+  }
+
+  const triggerContent = trigger ?? null
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        {triggerContent}
-      </DrawerTrigger>
-      <DrawerContent className="bg-popover border-border">
+    <>
+      {!triggerContent && (
+        <FloatingActionMenu
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          anchorSelector="#bottom-nav"
+          anchorPosition="top"
+          anchorOffsetY={-8}
+          actions={[
+            // Replace these onClick handlers if you already have openLogDrawer helpers.
+            { id: "feeding", label: "Feeding", icon: Droplets, onClick: () => handleActionSelect("feeding") },
+            { id: "sleep", label: "Sleep", icon: Moon, onClick: () => handleActionSelect("sleep") },
+            { id: "play", label: "Play", icon: Baby, onClick: () => handleActionSelect("play") },
+            { id: "growth", label: "Growth", icon: Ruler, onClick: () => handleActionSelect("growth") },
+            { id: "diary", label: "Diary", icon: BookOpen, onClick: () => handleActionSelect("diary") },
+          ]}
+        />
+      )}
+      <Drawer open={open} onOpenChange={setOpen}>
+        {triggerContent && (
+          <DrawerTrigger asChild>
+            {triggerContent}
+          </DrawerTrigger>
+        )}
+        <DrawerContent className="bg-popover border-border">
         <div className="mx-auto w-full max-w-md">
           <DrawerHeader className="relative">
             <DrawerTitle className="text-center text-foreground">
@@ -425,8 +451,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
             )}
           </div>
         </div>
-      </DrawerContent>
-    </Drawer>
+        </DrawerContent>
+      </Drawer>
+    </>
   )
 }
 

@@ -19,6 +19,9 @@ yarn-error.log*
 # env files
 .env*
 
+# test env (local emulator config, never commit)
+.env.test.local
+
 # vercel
 .vercel
 
@@ -30,3 +33,4 @@ next-env.d.ts
 
 # project documentation (private)
 PROJECT_ACCOMPLISHMENTS.md
+TESTING_PLAN.md
