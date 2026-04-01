@@ -60,6 +60,7 @@ export function PresenceMode({ defaultDuration = 900 }: PresenceModeProps) {
             setIsExpanded(false)
             reset()
           }}
+          aria-label="Close presence mode"
         >
           <X className="w-6 h-6" />
         </Button>
@@ -80,7 +81,7 @@ export function PresenceMode({ defaultDuration = 900 }: PresenceModeProps) {
                 cy="128"
                 r="120"
                 fill="none"
-                stroke="oklch(0.20 0.008 260)"
+                stroke="var(--chart-grid)"
                 strokeWidth="8"
               />
               <circle
@@ -109,6 +110,7 @@ export function PresenceMode({ defaultDuration = 900 }: PresenceModeProps) {
               size="icon"
               className="h-12 w-12 rounded-full"
               onClick={reset}
+              aria-label="Reset timer"
             >
               <RotateCcw className="w-5 h-5" />
             </Button>
@@ -116,6 +118,7 @@ export function PresenceMode({ defaultDuration = 900 }: PresenceModeProps) {
               size="icon"
               className="h-16 w-16 rounded-full bg-ring-presence text-background hover:bg-ring-presence/90"
               onClick={() => setIsRunning(!isRunning)}
+              aria-label={isRunning ? "Pause timer" : "Start timer"}
             >
               {isRunning ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
             </Button>

@@ -72,16 +72,18 @@ export function AgesStages() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-10 w-10"
             onClick={() => scroll("left")}
+            aria-label="Scroll stages left"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-10 w-10"
             onClick={() => scroll("right")}
+            aria-label="Scroll stages right"
           >
             <ChevronRight className="w-4 h-4" />
           </Button>

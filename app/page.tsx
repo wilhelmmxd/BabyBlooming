@@ -130,7 +130,7 @@ function LoginForm() {
           <div className="p-4 rounded-full bg-primary/10 w-fit mx-auto">
             <Baby className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-semibold text-foreground">Nurture</h1>
+          <h1 className="text-2xl font-semibold text-foreground">Baby Blooming</h1>
           <p className="text-sm text-muted-foreground">
             {isSignup ? "Create an account" : "Sign in to continue"}
           </p>
@@ -138,8 +138,9 @@ function LoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Email</label>
+            <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -150,8 +151,9 @@ function LoginForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Password</label>
+            <label htmlFor="password" className="text-sm font-medium text-foreground">Password</label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -332,7 +334,7 @@ export default function HomePage() {
                       {logId && (
                         <LogDrawer
                           trigger={
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground">
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground" aria-label="Edit measurement">
                               <Pencil className="w-3.5 h-3.5" />
                             </Button>
                           }
@@ -346,9 +348,10 @@ export default function HomePage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-muted-foreground"
+                        className="h-10 w-10 text-muted-foreground"
                         onClick={() => handleDeleteLog(logId)}
                         disabled={!logId}
+                        aria-label="Delete measurement"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
@@ -429,9 +432,10 @@ export default function HomePage() {
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="mr-1 h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="mr-1 h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                           onClick={(event) => event.stopPropagation()}
                           onPointerDown={(event) => event.stopPropagation()}
+                          aria-label="Child settings"
                         >
                           <Settings className="w-4 h-4" />
                         </button>
@@ -472,7 +476,7 @@ export default function HomePage() {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="Notifications">
               <Bell className="w-5 h-5" />
             </Button>
             <Button
@@ -480,7 +484,7 @@ export default function HomePage() {
               size="icon"
               className="h-9 w-9 text-muted-foreground"
               onClick={logout}
-              title="Sign out"
+              aria-label="Sign out"
             >
               <LogOut className="w-5 h-5" />
             </Button>

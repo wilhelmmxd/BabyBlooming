@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -65,6 +64,12 @@
   --ring-sleep: oklch(0.85 0.05 160);
   --ring-feeding: oklch(0.88 0.08 240);
   --ring-presence: oklch(0.75 0.12 30);
+
+  /* Chart UI colors - For Recharts and overlays */
+  --chart-grid: oklch(0.25 0.01 260);
+  --chart-text: oklch(0.60 0.02 260);
+  --chart-bg: oklch(0.17 0.008 260);
+  --chart-border: oklch(0.25 0.01 260);
 }
 
 .dark {
@@ -101,6 +106,13 @@
   --sidebar-accent-foreground: oklch(0.32 0.01 260);
   --sidebar-border: oklch(0.85 0.05 160);
   --sidebar-ring: oklch(0.88 0.08 240);
+  --ring-sleep: oklch(0.85 0.05 160);
+  --ring-feeding: oklch(0.88 0.08 240);
+  --ring-presence: oklch(0.75 0.12 30);
+  --chart-grid: oklch(0.25 0.01 260);
+  --chart-text: oklch(0.60 0.02 260);
+  --chart-bg: oklch(0.17 0.008 260);
+  --chart-border: oklch(0.25 0.01 260);
 }
 
 @theme inline {
@@ -176,4 +188,15 @@
 
 .animate-breathe {
   animation: breathe 4s ease-in-out infinite;
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -219,6 +219,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 size="icon"
                 className="h-12 w-12 rounded-full"
                 onClick={() => setFeedingAmount(Math.max(0, feedingAmount - 10))}
+                aria-label="Decrease feeding amount"
               >
                 <Minus className="w-5 h-5" />
               </Button>
@@ -230,6 +231,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 size="icon"
                 className="h-12 w-12 rounded-full"
                 onClick={() => setFeedingAmount(feedingAmount + 10)}
+                aria-label="Increase feeding amount"
               >
                 <Plus className="w-5 h-5" />
               </Button>
@@ -241,8 +243,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Start Time</Label>
+              <Label htmlFor="sleep-start" className="text-sm text-muted-foreground">Start Time</Label>
               <Input
+                id="sleep-start"
                 type="time"
                 value={sleepStart}
                 onChange={(e) => setSleepStart(e.target.value)}
@@ -250,8 +253,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">End Time</Label>
+              <Label htmlFor="sleep-end" className="text-sm text-muted-foreground">End Time</Label>
               <Input
+                id="sleep-end"
                 type="time"
                 value={sleepEnd}
                 onChange={(e) => setSleepEnd(e.target.value)}
@@ -279,8 +283,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Weight (kg)</Label>
+              <Label htmlFor="weight" className="text-sm text-muted-foreground">Weight (kg)</Label>
               <Input
+                id="weight"
                 type="number"
                 step="0.1"
                 placeholder="e.g., 7.5"
@@ -290,8 +295,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Height (cm)</Label>
+              <Label htmlFor="height" className="text-sm text-muted-foreground">Height (cm)</Label>
               <Input
+                id="height"
                 type="number"
                 step="0.1"
                 placeholder="e.g., 65.0"
@@ -307,8 +313,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Note</Label>
+              <Label htmlFor="diary-note" className="text-sm text-muted-foreground">Note</Label>
               <Textarea
+                id="diary-note"
                 placeholder="Write about today's moments..."
                 value={diaryNote}
                 onChange={(e) => setDiaryNote(e.target.value)}
@@ -316,8 +323,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Tags</Label>
-              <div className="flex flex-wrap gap-2">
+              <Label htmlFor="diary-tags" className="text-sm text-muted-foreground">Tags</Label>
+              <div id="diary-tags" className="flex flex-wrap gap-2">
                 {availableTags.map((tag) => (
                   <button
                     key={tag}
@@ -397,11 +404,12 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 type="button"
                 onClick={() => (isEdit ? setOpen(false) : setSelectedType(null))}
                 className="absolute left-4 top-4 text-muted-foreground hover:text-foreground"
+                aria-label="Go back"
               >
                 <X className="w-5 h-5" />
               </button>
             )}
-            <DrawerClose className="absolute right-4 top-4 text-muted-foreground hover:text-foreground">
+            <DrawerClose className="absolute right-4 top-4 text-muted-foreground hover:text-foreground" aria-label="Close log drawer">
               <X className="w-5 h-5" />
             </DrawerClose>
           </DrawerHeader>

@@ -64,15 +64,15 @@ export function GrowthChart({ data, currentWeight, currentHeight, currentWeightP
         style={{
           margin: 0,
           padding: 10,
-          backgroundColor: "oklch(0.17 0.008 260)",
-          border: "1px solid oklch(0.25 0.01 260)",
+          backgroundColor: "var(--chart-bg)",
+          border: "1px solid var(--chart-border)",
           whiteSpace: "nowrap",
           borderRadius: 12,
           boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
         }}
       >
         {label && (
-          <p style={{ margin: 0, color: "oklch(0.95 0.01 260)", fontWeight: 500 }}>{label}</p>
+          <p style={{ margin: 0, color: "var(--foreground)", fontWeight: 500 }}>{label}</p>
         )}
         <div style={{ paddingTop: 4, color: config.color }}>
           {config.label}: {value}
@@ -113,86 +113,98 @@ export function GrowthChart({ data, currentWeight, currentHeight, currentWeightP
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        {/* Current Stats */}
-        <div className="flex gap-4 mb-4">
-          <div className="flex-1 p-3 rounded-xl bg-secondary/50">
-            <div className="flex items-center gap-2">
-              <Icon className="w-4 h-4 text-primary" />
-              <span className="text-xs text-muted-foreground">{config.label}</span>
+        {data.length === 0 ? (
+          <div className="h-48 w-full flex flex-col items-center justify-center rounded-xl border border-dashed border-muted-foreground/30 bg-secondary/20">
+            <div className="p-3 rounded-full bg-muted-foreground/10 mb-3">
+              <Scale className="w-6 h-6 text-muted-foreground/60" />
             </div>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {activeMetric === "weight" ? currentWeight : currentHeight}
-              <span className="text-sm font-normal text-muted-foreground ml-1">{config.unit}</span>
-            </p>
+            <p className="text-sm font-medium text-muted-foreground text-center">No measurements yet</p>
+            <p className="text-xs text-muted-foreground/70 text-center mt-1">Add growth data to track your child&apos;s progress</p>
           </div>
-          <div className="flex-1 p-3 rounded-xl bg-secondary/50">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-chart-3" />
-              <span className="text-xs text-muted-foreground">Percentile</span>
+        ) : (
+          <>
+            {/* Current Stats */}
+            <div className="flex gap-4 mb-4">
+              <div className="flex-1 p-3 rounded-xl bg-secondary/50">
+                <div className="flex items-center gap-2">
+                  <Icon className="w-4 h-4 text-primary" />
+                  <span className="text-xs text-muted-foreground">{config.label}</span>
+                </div>
+                <p className="text-xl font-semibold text-foreground mt-1">
+                  {activeMetric === "weight" ? currentWeight : currentHeight}
+                  <span className="text-sm font-normal text-muted-foreground ml-1">{config.unit}</span>
+                </p>
+              </div>
+              <div className="flex-1 p-3 rounded-xl bg-secondary/50">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-chart-3" />
+                  <span className="text-xs text-muted-foreground">Percentile</span>
+                </div>
+                <p className="text-xl font-semibold text-foreground mt-1">
+                  {activeMetric === "weight" && currentWeightPercentile != null
+                    ? currentWeightPercentile
+                    : activeMetric === "height" && currentHeightPercentile != null
+                      ? currentHeightPercentile
+                      : "-"}
+                  {activeMetric === "weight" && currentWeightPercentile != null && (
+                    <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
+                  )}
+                  {activeMetric === "height" && currentHeightPercentile != null && (
+                    <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
+                  )}
+                </p>
+              </div>
             </div>
-            <p className="text-xl font-semibold text-foreground mt-1">
-              {activeMetric === "weight" && currentWeightPercentile != null
-                ? currentWeightPercentile
-                : activeMetric === "height" && currentHeightPercentile != null
-                  ? currentHeightPercentile
-                  : "-"}
-              {activeMetric === "weight" && currentWeightPercentile != null && (
-                <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
-              )}
-              {activeMetric === "height" && currentHeightPercentile != null && (
-                <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
-              )}
-            </p>
-          </div>
-        </div>
 
-        {/* Chart */}
-        <div className="h-48 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-              <defs>
-                <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={config.color} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={config.color} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid 
-                strokeDasharray="3 3" 
-                stroke="oklch(0.25 0.01 260)" 
-                vertical={false}
-              />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 10, fill: "oklch(0.60 0.02 260)" }}
-                axisLine={{ stroke: "oklch(0.25 0.01 260)" }}
-                tickLine={false}
-              />
-              <YAxis 
-                tick={{ fontSize: 10, fill: "oklch(0.60 0.02 260)" }}
-                axisLine={false}
-                tickLine={false}
-                domain={['dataMin - 1', 'dataMax + 1']}
-              />
-              <Tooltip
-                content={renderTooltip}
-              />
-              <Area
-                type="monotone"
-                dataKey={activeMetric}
-                stroke="transparent"
-                fill="url(#colorGradient)"
-              />
-              <Line
-                type="monotone"
-                dataKey={activeMetric}
-                stroke={config.color}
-                strokeWidth={2}
-                dot={{ fill: config.color, strokeWidth: 0, r: 4 }}
-                activeDot={{ r: 6, fill: config.color }}
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
+            {/* Chart */}
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                  <defs>
+                    <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={config.color} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={config.color} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="var(--chart-grid)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 10, fill: "var(--chart-text)" }}
+                    axisLine={{ stroke: "var(--chart-grid)" }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: "var(--chart-text)" }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={['dataMin - 1', 'dataMax + 1']}
+                  />
+                  <Tooltip
+                    content={renderTooltip}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey={activeMetric}
+                    stroke="transparent"
+                    fill="url(#colorGradient)"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey={activeMetric}
+                    stroke={config.color}
+                    strokeWidth={2}
+                    dot={{ fill: config.color, strokeWidth: 0, r: 4 }}
+                    activeDot={{ r: 6, fill: config.color }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   )

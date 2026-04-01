@@ -12,7 +12,7 @@ import './globals.css'
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: 'Nurture - Parenting Tracker',
+  title: 'Baby Blooming - Parenting Tracker',
   description: 'A premium parenting companion for tracking sleep, feeding, growth, and precious moments.',
   generator: 'v0.app',
   icons: {
