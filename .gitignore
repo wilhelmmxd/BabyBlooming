@@ -34,3 +34,5 @@ next-env.d.ts
 # project documentation (private)
 PROJECT_ACCOMPLISHMENTS.md
 TESTING_PLAN.md
+.vercel
+.env*.local
