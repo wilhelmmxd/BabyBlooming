@@ -19,6 +19,7 @@ import type { GrowthDataPoint } from "@/components/growth-chart"
 import { db } from "./firebase"
 import { useAuth } from "./auth-context"
 import { useChildren } from "./children-context"
+import { isPlaywrightE2E, PLAYWRIGHT_E2E_UID } from "./e2e-playwright"
 import { getAgeInMonths, getGoalsForAge } from "./caregiving-goals"
 import { calculateHeightPercentile, calculateWeightPercentile } from "./growth-percentiles"
 
@@ -87,6 +88,13 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
+    if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) {
+      setLogs([])
+      setError(null)
+      setLoading(false)
+      return
+    }
+
     const logsRef = collection(db, "logs")
     const logsQuery = query(
       logsRef,
@@ -132,6 +140,9 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
     if (!user || !activeChild) {
       throw new Error("User or child not authenticated")
     }
+    if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) {
+      return
+    }
 
     try {
       setError(null)
@@ -154,6 +165,9 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
     if (!user || !activeChild) {
       throw new Error("User or child not authenticated")
     }
+    if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) {
+      return
+    }
 
     try {
       setError(null)
@@ -171,6 +185,9 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
   const deleteLog = async (logId: string) => {
     if (!user || !activeChild) {
       throw new Error("User or child not authenticated")
+    }
+    if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) {
+      return
     }
 
     try {
