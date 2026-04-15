@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore'
 import { db } from './firebase'
 import { useAuth } from './auth-context'
+import { isPlaywrightE2E, PLAYWRIGHT_E2E_UID } from './e2e-playwright'
 
 export interface Child {
   id: string
@@ -48,6 +49,20 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
     if (!user) {
       setChildren([])
       setActiveChild(null)
+      setLoading(false)
+      return
+    }
+
+    if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) {
+      const mock: Child = {
+        id: 'e2e-child-1',
+        userId: PLAYWRIGHT_E2E_UID,
+        name: 'Test Child',
+        birthDate: '2023-06-01',
+        createdAt: new Date().toISOString(),
+      }
+      setChildren([mock])
+      setActiveChild(mock)
       setLoading(false)
       return
     }
@@ -90,6 +105,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
   const addChild = useCallback(
     async (name: string, birthDate?: string, sex?: "male" | "female") => {
       if (!user) return
+      if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) return
 
       try {
         const childrenRef = collection(db, 'children')
@@ -121,6 +137,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
   const deleteChild = useCallback(
     async (childId: string) => {
       if (!user) return
+      if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) return
 
       try {
         await deleteDoc(doc(db, 'children', childId))
@@ -137,6 +154,7 @@ export function ChildrenProvider({ children: childrenComponents }: { children: R
   const editChild = useCallback(
     async (childId: string, updates: Partial<Omit<Child, "id">>) => {
       if (!user) return
+      if (isPlaywrightE2E() && user.uid === PLAYWRIGHT_E2E_UID) return
 
       try {
         const childRef = doc(db, "children", childId)

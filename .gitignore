@@ -22,6 +22,13 @@ yarn-error.log*
 # test env (local emulator config, never commit)
 .env.test.local
 
+# Tests — generated reports & artifacts (see tests/README.md)
+/tests/results/
+/blob-report/
+# legacy paths (safe to remove after local cleanup)
+/test-results/
+/playwright-report/
+
 # vercel
 .vercel
 
