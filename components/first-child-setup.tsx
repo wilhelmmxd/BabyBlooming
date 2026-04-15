@@ -114,7 +114,7 @@ export function FirstChildSetup() {
               <Baby className="w-6 h-6 text-primary" />
             </div>
           </div>
-          <DialogTitle className="text-center text-xl">Welcome to Baby Blooming!</DialogTitle>
+          <DialogTitle className="text-center text-xl">Welcome to Baby Blooming!!!</DialogTitle>
           <DialogDescription className="text-center">
             Let's add your first child to get started
           </DialogDescription>
