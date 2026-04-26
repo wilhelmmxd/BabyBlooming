@@ -2,8 +2,6 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.babyblooming.app',
-  appName: 'my-v0-project',
+  appName: 'BabyBlooming',
   webDir: 'out'
 };
-
-export default config;
