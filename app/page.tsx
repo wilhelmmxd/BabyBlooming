@@ -14,7 +14,7 @@ import { BottomNav } from "@/components/bottom-nav"
 import { FirstChildSetup } from "@/components/first-child-setup"
 import { EditChildDialog } from "@/components/edit-child-dialog"
 import { SplashScreen } from "@/components/splash-screen"
-import { Baby, LogOut, Check, ChevronDown, Pencil, Trash2, AlertCircle } from "lucide-react"
+import { Baby, LogOut, Check, ChevronDown, Pencil, Trash2, AlertCircle, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -416,21 +416,29 @@ export default function HomePage() {
                     <ChevronDown className="w-4 h-4 text-muted-foreground" />
                   </button>
                 </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {children.map((child) => (
-                  <div key={child.id} className="group flex items-center">
+              <DropdownMenuContent align="start" className="w-56 p-1.5">
+                {children.map((child, index) => (
+                  <div
+                    key={child.id}
+                    className={`group flex items-center rounded-lg ${index < children.length - 1 ? "mb-1 border-b border-border/60 pb-1" : ""}`}
+                  >
                     <DropdownMenuItem
                       onClick={() => setActiveChild(child)}
-                      className="cursor-pointer flex-1 flex items-center justify-between"
+                      className={`cursor-pointer h-11 flex-1 flex items-center justify-between rounded-md px-2.5 ${activeChild?.id === child.id ? "bg-primary/10" : ""}`}
                     >
-                      <span>{child.name}</span>
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                          {child.name.charAt(0).toUpperCase()}
+                        </span>
+                        <span className="truncate">{child.name}</span>
+                      </div>
                       {activeChild?.id === child.id && <Check className="w-4 h-4" />}
                     </DropdownMenuItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="mr-1 h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="mr-1 h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-60 group-hover:opacity-100 transition-opacity"
                           onClick={(event) => event.stopPropagation()}
                           onPointerDown={(event) => event.stopPropagation()}
                           aria-label="Child settings"
