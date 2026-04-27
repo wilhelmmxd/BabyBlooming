@@ -6,6 +6,7 @@ import { DailyTimeline } from "@/components/daily-timeline"
 import { GrowthChart } from "@/components/growth-chart"
 import { DiaryJournal } from "@/components/diary-journal"
 import { AgesStages } from "@/components/ages-stages"
+import { TipsForToday } from "@/components/tips-for-today"
 import { PresenceMode } from "@/components/presence-mode"
 import { LogDrawer } from "@/components/log-drawer"
 import { BottomNav } from "@/components/bottom-nav"
@@ -375,21 +376,7 @@ export default function HomePage() {
         return (
           <div className="space-y-6">
             <AgesStages />
-            <section className="space-y-3">
-              <h3 className="text-sm font-medium text-muted-foreground px-1">Tips for Today</h3>
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30">
-                <h4 className="text-sm font-semibold text-foreground mb-2">Tummy Time Tip</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Try placing a colorful toy just out of reach during tummy time. This encourages your baby to lift their head and eventually reach for the toy, strengthening their neck and arm muscles.
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-ring-feeding/20 to-ring-feeding/5 border border-ring-feeding/30">
-                <h4 className="text-sm font-semibold text-foreground mb-2">Sleep Schedule</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  At 4-6 months, most babies need 14-16 hours of sleep per day, including 2-3 naps. Watch for sleep cues like yawning and eye rubbing.
-                </p>
-              </div>
-            </section>
+            <TipsForToday />
           </div>
         )
 
