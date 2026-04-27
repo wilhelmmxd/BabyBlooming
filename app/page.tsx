@@ -13,6 +13,7 @@ import { SettingsMenu } from "@/components/settings-menu"
 import { BottomNav } from "@/components/bottom-nav"
 import { FirstChildSetup } from "@/components/first-child-setup"
 import { EditChildDialog } from "@/components/edit-child-dialog"
+import { SplashScreen } from "@/components/splash-screen"
 import { Baby, LogOut, Check, ChevronDown, Pencil, Trash2, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -233,6 +234,17 @@ export default function HomePage() {
   const { children, activeChild, setActiveChild, loading: childrenLoading, deleteChild } = useChildren()
   const { timelineEntries, diaryEntries, growthData, loading: logsLoading, sleepProgress, feedingProgress, presenceProgress, sleepGoal, feedingGoal, presenceGoal, sleepCount, feedingCount, presenceCount, deleteLog } = useLogs()
   const [activeTab, setActiveTab] = useState("home")
+  const [showSplash, setShowSplash] = useState(true)
+
+  useEffect(() => {
+    if (authLoading || childrenLoading) return
+
+    const timer = window.setTimeout(() => {
+      setShowSplash(false)
+    }, 700)
+
+    return () => window.clearTimeout(timer)
+  }, [authLoading, childrenLoading])
   const handleDeleteChild = async (childId: string) => {
     const confirmed = window.confirm("Delete this child profile?")
     if (!confirmed) return
@@ -246,16 +258,13 @@ export default function HomePage() {
     await deleteLog(logId)
   }
 
-  if (authLoading || childrenLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    )
-  }
-
   if (!user) {
-    return <LoginForm />
+    return (
+      <>
+        {showSplash && <SplashScreen />}
+        <LoginForm />
+      </>
+    )
   }
 
   const renderContent = () => {
@@ -388,9 +397,10 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background pb-24">
+      {showSplash && <SplashScreen />}
       {/* Header */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="flex items-center justify-between px-4 py-3 max-w-md mx-auto">
+        <div className="flex items-center justify-between px-4 py-3 pt-[env(safe-area-inset-top)] max-w-md mx-auto">
           <div className="flex items-center group">
             {children.length > 0 ? (
               <DropdownMenu>
@@ -468,7 +478,7 @@ export default function HomePage() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-muted-foreground"
+              className="h-11 w-11 text-muted-foreground touch-manipulation"
               onClick={logout}
               aria-label="Sign out"
             >

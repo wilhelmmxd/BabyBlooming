@@ -143,7 +143,7 @@ export function SettingsMenu() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="Settings">
+          <Button variant="ghost" size="icon" className="h-11 w-11 text-muted-foreground touch-manipulation" aria-label="Settings">
             <Cog className="w-5 h-5" />
           </Button>
         </DropdownMenuTrigger>
@@ -212,6 +212,7 @@ export function SettingsMenu() {
                   type="number"
                   min="0"
                   step="1"
+                  inputMode="numeric"
                   value={sleepInput}
                   onChange={(e) => setSleepInput(e.target.value)}
                 />
@@ -223,6 +224,7 @@ export function SettingsMenu() {
                   type="number"
                   min="0"
                   step="1"
+                  inputMode="numeric"
                   value={feedingInput}
                   onChange={(e) => setFeedingInput(e.target.value)}
                 />
@@ -234,6 +236,7 @@ export function SettingsMenu() {
                   type="number"
                   min="0"
                   step="1"
+                  inputMode="numeric"
                   value={presenceInput}
                   onChange={(e) => setPresenceInput(e.target.value)}
                 />
@@ -247,6 +250,7 @@ export function SettingsMenu() {
 
           <DialogFooter>
             <Button variant="secondary" onClick={handleResetGoals} disabled={!activeChild?.id}>
+              <RotateCcw className="w-4 h-4" />
               Reset to age default
             </Button>
             <Button variant="secondary" onClick={() => setGoalsOpen(false)}>

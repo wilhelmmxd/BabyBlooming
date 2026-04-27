@@ -123,6 +123,8 @@ export function AddChildDialog() {
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
               placeholder="e.g., Emma"
+              autoComplete="name"
+              enterKeyHint="next"
               className="h-10"
             />
           </div>
@@ -136,6 +138,7 @@ export function AddChildDialog() {
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
+              enterKeyHint="done"
               className="h-10"
             />
           </div>

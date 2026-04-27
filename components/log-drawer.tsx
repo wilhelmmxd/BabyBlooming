@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { Moon, Droplets, Baby, Ruler, BookOpen, X, Plus, Minus, AlertCircle, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -40,7 +40,7 @@ const logOptions: LogOption[] = [
 ]
 
 interface LogDrawerProps {
-  trigger?: React.ReactNode
+  trigger?: ReactNode
   initialLog?: { id: string; type: LogType; data: Record<string, unknown> }
 }
 
@@ -247,6 +247,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
               <Input
                 id="sleep-start"
                 type="time"
+                inputMode="numeric"
+                enterKeyHint="next"
                 value={sleepStart}
                 onChange={(e) => setSleepStart(e.target.value)}
                 className="bg-secondary border-0 h-12 text-lg"
@@ -257,6 +259,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
               <Input
                 id="sleep-end"
                 type="time"
+                inputMode="numeric"
+                enterKeyHint="done"
                 value={sleepEnd}
                 onChange={(e) => setSleepEnd(e.target.value)}
                 className="bg-secondary border-0 h-12 text-lg"
@@ -288,6 +292,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 id="weight"
                 type="number"
                 step="0.1"
+                inputMode="decimal"
+                enterKeyHint="next"
                 placeholder="e.g., 7.5"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
@@ -300,6 +306,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 id="height"
                 type="number"
                 step="0.1"
+                inputMode="decimal"
+                enterKeyHint="done"
                 placeholder="e.g., 65.0"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
