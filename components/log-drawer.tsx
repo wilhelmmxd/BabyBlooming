@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Moon, Droplets, Baby, Ruler, BookOpen, X, Plus, Minus, AlertCircle } from "lucide-react"
+import { Moon, Droplets, Baby, Ruler, BookOpen, X, Plus, Minus, AlertCircle, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -366,6 +366,18 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
 
   const triggerContent = trigger ?? null
 
+  const handleBack = () => {
+    if (isEdit || triggerContent) {
+      setOpen(false)
+      return
+    }
+
+    // Return to the floating radial actions opened from the green plus button.
+    setOpen(false)
+    setSelectedType(null)
+    setMenuOpen(true)
+  }
+
   return (
     <>
       {!triggerContent && (
@@ -402,11 +414,11 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
             {activeType && (
               <button
                 type="button"
-                onClick={() => (isEdit ? setOpen(false) : setSelectedType(null))}
+                onClick={handleBack}
                 className="absolute left-4 top-4 text-muted-foreground hover:text-foreground"
                 aria-label="Go back"
               >
-                <X className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
             )}
             <DrawerClose className="absolute right-4 top-4 text-muted-foreground hover:text-foreground" aria-label="Close log drawer">
