@@ -23,6 +23,7 @@ import { isPlaywrightE2E, PLAYWRIGHT_E2E_UID } from "./e2e-playwright"
 import { getAgeInMonths, getGoalsForAge } from "./caregiving-goals"
 import { useSettings } from "./settings-context"
 import { calculateHeightPercentile, calculateWeightPercentile } from "./growth-percentiles"
+import { cmToIn, kgToLb, mlToFlOz, roundTo } from "./measurement"
 
 type LogType = "feeding" | "sleep" | "play" | "growth" | "diary"
 
@@ -217,7 +218,7 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
       switch (log.type) {
         case "feeding":
           entry.title = "Feeding"
-          entry.details = `${log.data.amount ?? 0} ml`
+          entry.details = `${roundTo(mlToFlOz(Number(log.data.amount ?? 0)), 1)} fl oz`
           break
         case "sleep":
           entry.title = "Sleep"
@@ -229,7 +230,7 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
           break
         case "growth":
           entry.title = "Growth"
-          entry.details = `${log.data.weight ?? 0} kg · ${log.data.height ?? 0} cm`
+          entry.details = `${roundTo(kgToLb(Number(log.data.weight ?? 0)), 1)} lb · ${roundTo(cmToIn(Number(log.data.height ?? 0)), 1)} in`
           break
         case "diary":
           entry.title = "Diary"
@@ -263,28 +264,28 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
     return logs
       .filter((log) => log.type === "growth")
       .map((log) => {
-        const weight = Number(log.data.weight ?? 0)
-        const height = Number(log.data.height ?? 0)
-        
+        const weightKg = Number(log.data.weight ?? 0)
+        const heightCm = Number(log.data.height ?? 0)
+
         let weightPercentile: number | undefined
         let heightPercentile: number | undefined
         if (activeChild?.birthDate) {
           const ageAtMeasurement = getAgeInMonths(activeChild.birthDate)
           const sex = (activeChild?.sex as "male" | "female") || "male"
 
-          if (weight > 0) {
-            weightPercentile = Math.round(calculateWeightPercentile(weight, ageAtMeasurement, sex))
+          if (weightKg > 0) {
+            weightPercentile = Math.round(calculateWeightPercentile(weightKg, ageAtMeasurement, sex))
           }
-          if (height > 0) {
-            heightPercentile = Math.round(calculateHeightPercentile(height, ageAtMeasurement, sex))
+          if (heightCm > 0) {
+            heightPercentile = Math.round(calculateHeightPercentile(heightCm, ageAtMeasurement, sex))
           }
         }
-        
+
         return {
           id: log.id,
           date: formatDate(log.createdAt),
-          weight,
-          height,
+          weight: weightKg > 0 ? roundTo(kgToLb(weightKg), 1) : 0,
+          height: heightCm > 0 ? roundTo(cmToIn(heightCm), 1) : 0,
           weightPercentile,
           heightPercentile,
           rawData: log.data,

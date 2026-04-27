@@ -37,16 +37,26 @@ interface GrowthChartProps {
 export function GrowthChart({ data, currentWeight, currentHeight, currentWeightPercentile, currentHeightPercentile }: GrowthChartProps) {
   const [activeMetric, setActiveMetric] = useState<"weight" | "height">("weight")
 
+  const toOrdinal = (value: number) => {
+    const mod100 = value % 100
+    if (mod100 >= 11 && mod100 <= 13) return `${value}th`
+    const mod10 = value % 10
+    if (mod10 === 1) return `${value}st`
+    if (mod10 === 2) return `${value}nd`
+    if (mod10 === 3) return `${value}rd`
+    return `${value}th`
+  }
+
   const chartConfig = {
     weight: {
       label: "Weight",
-      unit: "kg",
+      unit: "lb",
       color: "oklch(0.72 0.12 145)",
       icon: Scale
     },
     height: {
       label: "Height",
-      unit: "cm",
+      unit: "in",
       color: "oklch(0.70 0.15 220)",
       icon: Ruler
     }
@@ -142,16 +152,10 @@ export function GrowthChart({ data, currentWeight, currentHeight, currentWeightP
                 </div>
                 <p className="text-xl font-semibold text-foreground mt-1">
                   {activeMetric === "weight" && currentWeightPercentile != null
-                    ? currentWeightPercentile
+                    ? toOrdinal(currentWeightPercentile)
                     : activeMetric === "height" && currentHeightPercentile != null
-                      ? currentHeightPercentile
+                      ? toOrdinal(currentHeightPercentile)
                       : "-"}
-                  {activeMetric === "weight" && currentWeightPercentile != null && (
-                    <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
-                  )}
-                  {activeMetric === "height" && currentHeightPercentile != null && (
-                    <span className="text-sm font-normal text-muted-foreground ml-1">th</span>
-                  )}
                 </p>
               </div>
             </div>

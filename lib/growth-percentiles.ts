@@ -67,28 +67,42 @@ function findLMSForAge(
   sex: "male" | "female"
 ): LMSData | null {
   const data = sex === "male" ? dataset.data.male : dataset.data.female
-  
-  // Find exact match or closest match
-  let exact = data.find((d) => d.ageMonths === ageMonths)
+  if (!data.length) return null
+
+  // CDC infant datasets are bounded. Clamp age to avoid extrapolation artifacts.
+  const minAge = data[0].ageMonths
+  const maxAge = data[data.length - 1].ageMonths
+  const clampedAge = Math.min(Math.max(ageMonths, minAge), maxAge)
+  if (clampedAge === minAge) return data[0]
+  if (clampedAge === maxAge) return data[data.length - 1]
+
+  const exact = data.find((d) => d.ageMonths === clampedAge)
   if (exact) return exact as LMSData
 
-  // Find surrounding points for interpolation
   let lower = data[0]
   let upper = data[data.length - 1]
 
   for (let i = 0; i < data.length - 1; i++) {
-    if (data[i].ageMonths < ageMonths && data[i + 1].ageMonths > ageMonths) {
+    if (data[i].ageMonths < clampedAge && data[i + 1].ageMonths > clampedAge) {
       lower = data[i]
       upper = data[i + 1]
       break
     }
   }
 
-  // Linear interpolation
-  const t = (ageMonths - lower.ageMonths) / (upper.ageMonths - lower.ageMonths)
-  
+  if (upper.ageMonths === lower.ageMonths) {
+    return {
+      ageMonths: clampedAge,
+      L: lower.L,
+      M: lower.M,
+      S: lower.S,
+    }
+  }
+
+  const t = (clampedAge - lower.ageMonths) / (upper.ageMonths - lower.ageMonths)
+
   return {
-    ageMonths,
+    ageMonths: clampedAge,
     L: lower.L + t * (upper.L - lower.L),
     M: lower.M + t * (upper.M - lower.M),
     S: lower.S + t * (upper.S - lower.S),

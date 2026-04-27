@@ -30,18 +30,21 @@ export function FloatingActionMenu({
   anchorPosition = "center",
 }: FloatingActionMenuProps) {
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null)
+  const isBottomNavAnchor = anchorSelector === "#bottom-nav"
 
   const positions = useMemo(() => {
-    const radius = 96
-    const arc = 140
+    const radius = 116
+    const arc = 170
+    const horizontalSpread = 1.08
+    const verticalLift = 1.2
     const startAngle = 90 - arc / 2
     const step = actions.length > 1 ? arc / (actions.length - 1) : 0
 
     return actions.map((_, index) => {
       const angle = (startAngle + step * index) * (Math.PI / 180)
       return {
-        x: Math.cos(angle) * radius,
-        y: -Math.sin(angle) * radius,
+        x: Math.cos(angle) * radius * horizontalSpread,
+        y: -Math.sin(angle) * radius * verticalLift,
       }
     })
   }, [actions])
@@ -106,13 +109,21 @@ export function FloatingActionMenu({
   }
 
   const containerClassName = anchor
-    ? "fixed z-50 relative h-14 w-14 -translate-x-1/2 -translate-y-1/2"
-    : "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 relative h-14 w-14"
+    ? "fixed z-50 h-14 w-14 -translate-x-1/2 -translate-y-1/2"
+    : isBottomNavAnchor
+      ? "fixed left-1/2 -translate-x-1/2 z-50 h-14 w-14"
+      : "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 h-14 w-14"
+
+  const containerStyle = anchor
+    ? { left: anchor.x, top: anchor.y }
+    : isBottomNavAnchor
+      ? { bottom: "calc(env(safe-area-inset-bottom, 0px) + 2.25rem)" }
+      : undefined
 
   return (
     <div
       className={containerClassName}
-      style={anchor ? { left: anchor.x, top: anchor.y } : undefined}
+      style={containerStyle}
     >
       <AnimatePresence>
         {open && (
