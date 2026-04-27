@@ -400,7 +400,7 @@ export default function HomePage() {
       {showSplash && <SplashScreen />}
       {/* Header */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="flex items-center justify-between px-4 py-3 pt-[env(safe-area-inset-top)] max-w-md mx-auto">
+        <div className="flex items-center justify-between px-4 py-3 pt-4 max-w-md mx-auto" style={{ paddingTop: `calc(env(safe-area-inset-top, 0px) + 1rem)` }}>
           <div className="flex items-center group">
             {children.length > 0 ? (
               <DropdownMenu>
