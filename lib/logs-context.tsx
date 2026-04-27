@@ -20,6 +20,7 @@ import { db } from "./firebase"
 import { useAuth } from "./auth-context"
 import { useChildren } from "./children-context"
 import { getAgeInMonths, getGoalsForAge } from "./caregiving-goals"
+import { useSettings } from "./settings-context"
 import { calculateHeightPercentile, calculateWeightPercentile } from "./growth-percentiles"
 
 type LogType = "feeding" | "sleep" | "play" | "growth" | "diary"
@@ -75,6 +76,7 @@ const toDate = (value: unknown) => {
 export function LogsProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
   const { activeChild } = useChildren()
+  const { getGoalsForChild } = useSettings()
   const [logs, setLogs] = useState<LogRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -283,7 +285,11 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
 
     // Get dynamic goals based on child's age
     const ageInMonths = activeChild?.birthDate ? getAgeInMonths(activeChild.birthDate) : 0
-    const { sleepGoal: sleepG, feedingGoal: feedingG, playGoal: playG } = getGoalsForAge(ageInMonths)
+    const ageBasedGoals = getGoalsForAge(ageInMonths)
+    const customGoals = activeChild?.id ? getGoalsForChild(activeChild.id) : null
+    const sleepG = customGoals?.sleepGoal ?? ageBasedGoals.sleepGoal
+    const feedingG = customGoals?.feedingGoal ?? ageBasedGoals.feedingGoal
+    const playG = customGoals?.presenceGoal ?? ageBasedGoals.playGoal
 
     return {
       sleepProgress: Math.min(100, (sleepCount / sleepG) * 100),
@@ -296,7 +302,7 @@ export function LogsProvider({ children }: { children: React.ReactNode }) {
       feedingCount,
       presenceCount,
     }
-  }, [logs, activeChild?.birthDate])
+  }, [logs, activeChild?.birthDate, activeChild?.id, getGoalsForChild])
 
   return (
     <LogsContext.Provider

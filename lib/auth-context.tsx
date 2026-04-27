@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -19,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   loginWithGoogle: () => Promise<void>
   logout: () => Promise<void>
+  sendPasswordReset: (email?: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -53,8 +55,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signOut(auth)
   }
 
+  const sendPasswordReset = async (email?: string) => {
+    const targetEmail = email ?? auth.currentUser?.email
+    if (!targetEmail) {
+      throw new Error("No email address available for password reset")
+    }
+
+    await sendPasswordResetEmail(auth, targetEmail)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, loginWithGoogle, logout, sendPasswordReset }}>
       {children}
     </AuthContext.Provider>
   )

@@ -9,10 +9,11 @@ import { AgesStages } from "@/components/ages-stages"
 import { TipsForToday } from "@/components/tips-for-today"
 import { PresenceMode } from "@/components/presence-mode"
 import { LogDrawer } from "@/components/log-drawer"
+import { SettingsMenu } from "@/components/settings-menu"
 import { BottomNav } from "@/components/bottom-nav"
 import { FirstChildSetup } from "@/components/first-child-setup"
 import { EditChildDialog } from "@/components/edit-child-dialog"
-import { Baby, Bell, LogOut, Check, ChevronDown, Pencil, Trash2, Settings, AlertCircle } from "lucide-react"
+import { Baby, LogOut, Check, ChevronDown, Pencil, Trash2, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -463,9 +464,7 @@ export default function HomePage() {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="Notifications">
-              <Bell className="w-5 h-5" />
-            </Button>
+            <SettingsMenu />
             <Button
               variant="ghost"
               size="icon"

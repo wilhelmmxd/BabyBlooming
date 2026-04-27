@@ -4,9 +4,11 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/lib/auth-context'
 import { ChildrenProvider } from '@/lib/children-context'
+import { SettingsProvider } from '@/lib/settings-context'
 import { LogsProvider } from '@/lib/logs-context'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Toaster } from '@/components/ui/toaster'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -48,19 +50,23 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ErrorBoundary>
-          <AuthProvider>
-            <ChildrenProvider>
-              <LogsProvider>
-                {children}
-                <Analytics />
-              </LogsProvider>
-            </ChildrenProvider>
-          </AuthProvider>
-          <Toaster />
-        </ErrorBoundary>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <ErrorBoundary>
+            <AuthProvider>
+              <ChildrenProvider>
+                <SettingsProvider>
+                  <LogsProvider>
+                    {children}
+                    <Analytics />
+                  </LogsProvider>
+                </SettingsProvider>
+              </ChildrenProvider>
+            </AuthProvider>
+            <Toaster />
+          </ErrorBoundary>
+        </ThemeProvider>
       </body>
     </html>
   )
