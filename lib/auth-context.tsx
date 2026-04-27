@@ -12,6 +12,7 @@ import {
   type User,
 } from "firebase/auth"
 import { auth } from "./firebase"
+import { isPlaywrightE2E, PLAYWRIGHT_E2E_UID } from "./e2e-playwright"
 
 interface AuthContextType {
   user: User | null
@@ -30,6 +31,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (isPlaywrightE2E()) {
+      setUser({
+        uid: PLAYWRIGHT_E2E_UID,
+        email: "e2e@playwright.local",
+        emailVerified: true,
+      } as User)
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser)
       setLoading(false)
@@ -39,19 +50,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signup = async (email: string, password: string) => {
+    if (isPlaywrightE2E()) return
     await createUserWithEmailAndPassword(auth, email, password)
   }
 
   const login = async (email: string, password: string) => {
+    if (isPlaywrightE2E()) return
     await signInWithEmailAndPassword(auth, email, password)
   }
 
   const loginWithGoogle = async () => {
+    if (isPlaywrightE2E()) return
     const provider = new GoogleAuthProvider()
     await signInWithPopup(auth, provider)
   }
 
   const logout = async () => {
+    if (isPlaywrightE2E()) return
     await signOut(auth)
   }
 
