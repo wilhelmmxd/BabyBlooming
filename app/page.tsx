@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { AnimatePresence } from "framer-motion"
 import { ParentingRings } from "@/components/parenting-rings"
 import { DailyTimeline } from "@/components/daily-timeline"
 import { GrowthChart } from "@/components/growth-chart"
@@ -241,7 +242,7 @@ export default function HomePage() {
 
     const timer = window.setTimeout(() => {
       setShowSplash(false)
-    }, 2000)
+    }, 1200)
 
     return () => window.clearTimeout(timer)
   }, [authLoading, childrenLoading])
@@ -261,7 +262,9 @@ export default function HomePage() {
   if (!user) {
     return (
       <>
-        {showSplash && <SplashScreen />}
+        <AnimatePresence>
+          {showSplash && <SplashScreen key="splash" />}
+        </AnimatePresence>
         <LoginForm />
       </>
     )
@@ -397,7 +400,9 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background pb-24">
-      {showSplash && <SplashScreen />}
+      <AnimatePresence>
+        {showSplash && <SplashScreen key="splash" />}
+      </AnimatePresence>
       {/* Header */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="flex items-center justify-between px-4 py-3 pt-4 max-w-md mx-auto" style={{ paddingTop: `calc(env(safe-area-inset-top, 0px) + 1rem)` }}>
