@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from "react"
-import { Moon, Droplets, Baby, Ruler, BookOpen, X, Plus, Minus, AlertCircle, ArrowLeft } from "lucide-react"
+import { Moon, Droplets, Baby, Ruler, BookOpen, X, Plus, Minus, AlertCircle, UserRoundPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,6 +21,7 @@ import { useLogs } from "@/lib/logs-context"
 import { useAuth } from "@/lib/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { DIARY_TAGS, getDiaryTagStyle } from "@/lib/diary-tags"
+import { cmToIn, flOzToMl, inToCm, kgToLb, lbToKg, mlToFlOz, roundTo } from "@/lib/measurement"
 
 type LogType = "feeding" | "sleep" | "play" | "growth" | "diary"
 
@@ -51,8 +52,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [addChildOpen, setAddChildOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<LogType | null>(initialLog?.type ?? null)
-  const [feedingAmount, setFeedingAmount] = useState(120)
+  const [feedingAmount, setFeedingAmount] = useState(4)
   const [sleepStart, setSleepStart] = useState("")
   const [sleepEnd, setSleepEnd] = useState("")
   const [presenceMode, setPresenceMode] = useState(false)
@@ -66,8 +68,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
   const activeType = selectedType ?? initialLog?.type ?? null
 
   const resetForm = () => {
-    setSelectedType(null)
-    setFeedingAmount(120)
+    setFeedingAmount(4)
     setSleepStart("")
     setSleepEnd("")
     setPresenceMode(false)
@@ -83,19 +84,21 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
     if (initialLog) {
       const data = initialLog.data ?? {}
       setSelectedType(initialLog.type)
-      setFeedingAmount(Number(data.amount ?? 120))
+      setFeedingAmount(roundTo(mlToFlOz(Number(data.amount ?? 120)), 1))
       setSleepStart(String(data.startTime ?? ""))
       setSleepEnd(String(data.endTime ?? ""))
       setPresenceMode(Boolean(data.presenceMode))
-      setWeight(data.weight != null ? String(data.weight) : "")
-      setHeight(data.height != null ? String(data.height) : "")
+      setWeight(data.weight != null ? String(roundTo(kgToLb(Number(data.weight)), 1)) : "")
+      setHeight(data.height != null ? String(roundTo(cmToIn(Number(data.height)), 1)) : "")
       setDiaryNote(String(data.note ?? ""))
       setDiaryTags(Array.isArray(data.tags) ? (data.tags as string[]) : [])
       return
     }
 
-    resetForm()
-  }, [open, initialLog])
+    if (selectedType === null) {
+      resetForm()
+    }
+  }, [open, initialLog, selectedType])
 
   useEffect(() => {
     if (open) {
@@ -113,8 +116,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
 
     switch (activeType) {
       case "feeding":
-        if (feedingAmount < 0 || feedingAmount > 1000) {
-          error = "Feeding amount must be between 0 and 1000 ml"
+        if (feedingAmount < 0 || feedingAmount > 34) {
+          error = "Feeding amount must be between 0 and 34 fl oz"
         }
         break
       case "sleep":
@@ -125,11 +128,11 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         }
         break
       case "growth":
-        if (weight && (parseFloat(weight) < 0 || parseFloat(weight) > 50)) {
-          error = "Weight must be between 0 and 50 kg"
+        if (weight && (parseFloat(weight) < 0 || parseFloat(weight) > 110)) {
+          error = "Weight must be between 0 and 110 lb"
         }
-        if (height && (parseFloat(height) < 0 || parseFloat(height) > 200)) {
-          error = "Height must be between 0 and 200 cm"
+        if (height && (parseFloat(height) < 0 || parseFloat(height) > 79)) {
+          error = "Height must be between 0 and 79 in"
         }
         if (!weight && !height) {
           error = "At least one measurement (weight or height) is required"
@@ -156,7 +159,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
 
     switch (activeType) {
       case "feeding":
-        data.amount = feedingAmount
+        data.amount = Math.round(flOzToMl(feedingAmount))
         break
       case "sleep":
         data.startTime = sleepStart
@@ -166,8 +169,8 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         data.presenceMode = presenceMode
         break
       case "growth":
-        data.weight = weight ? parseFloat(weight) : 0
-        data.height = height ? parseFloat(height) : 0
+        data.weight = weight ? roundTo(lbToKg(parseFloat(weight)), 2) : 0
+        data.height = height ? roundTo(inToCm(parseFloat(height)), 2) : 0
         break
       case "diary":
         data.note = diaryNote
@@ -191,6 +194,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         })
       }
       resetForm()
+      setSelectedType(null)
       setOpen(false)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to save log"
@@ -211,13 +215,13 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
       case "feeding":
         return (
           <div className="space-y-3">
-            <Label className="text-sm text-muted-foreground">Amount (ml)</Label>
+            <Label className="text-sm text-muted-foreground">Amount (fl oz)</Label>
             <div className="flex items-center justify-center gap-4">
               <Button
                 variant="secondary"
                 size="icon"
                 className="h-12 w-12 rounded-full"
-                onClick={() => setFeedingAmount(Math.max(0, feedingAmount - 10))}
+                onClick={() => setFeedingAmount(roundTo(Math.max(0, feedingAmount - 0.5), 1))}
                 aria-label="Decrease feeding amount"
               >
                 <Minus className="w-5 h-5" />
@@ -229,7 +233,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 variant="secondary"
                 size="icon"
                 className="h-12 w-12 rounded-full"
-                onClick={() => setFeedingAmount(feedingAmount + 10)}
+                onClick={() => setFeedingAmount(roundTo(feedingAmount + 0.5, 1))}
                 aria-label="Increase feeding amount"
               >
                 <Plus className="w-5 h-5" />
@@ -286,28 +290,28 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="weight" className="text-sm text-muted-foreground">Weight (kg)</Label>
+              <Label htmlFor="weight" className="text-sm text-muted-foreground">Weight (lb)</Label>
               <Input
                 id="weight"
                 type="number"
                 step="0.1"
                 inputMode="decimal"
                 enterKeyHint="next"
-                placeholder="e.g., 7.5"
+                placeholder="e.g., 16.5"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 className="bg-secondary border-0 h-12 text-lg"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="height" className="text-sm text-muted-foreground">Height (cm)</Label>
+              <Label htmlFor="height" className="text-sm text-muted-foreground">Height (in)</Label>
               <Input
                 id="height"
                 type="number"
                 step="0.1"
                 inputMode="decimal"
                 enterKeyHint="done"
-                placeholder="e.g., 65.0"
+                placeholder="e.g., 26.0"
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
                 className="bg-secondary border-0 h-12 text-lg"
@@ -370,16 +374,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
 
   const triggerContent = trigger ?? null
 
-  const handleBack = () => {
-    if (isEdit || triggerContent) {
-      setOpen(false)
-      return
-    }
-
-    // Return to the floating radial actions opened from the green plus button.
-    setOpen(false)
-    setSelectedType(null)
-    setMenuOpen(true)
+  const handleAddChildSelect = () => {
+    setMenuOpen(false)
+    setAddChildOpen(true)
   }
 
   return (
@@ -390,9 +387,9 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
           onOpenChange={setMenuOpen}
           anchorSelector="#bottom-nav"
           anchorPosition="top"
-          anchorOffsetY={-8}
+          anchorOffsetY={0}
           actions={[
-            // Replace these onClick handlers if you already have openLogDrawer helpers.
+            { id: "add-child", label: "Child", icon: UserRoundPlus, onClick: handleAddChildSelect },
             { id: "feeding", label: "Feeding", icon: Droplets, onClick: () => handleActionSelect("feeding") },
             { id: "sleep", label: "Sleep", icon: Moon, onClick: () => handleActionSelect("sleep") },
             { id: "play", label: "Play", icon: Baby, onClick: () => handleActionSelect("play") },
@@ -401,6 +398,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
           ]}
         />
       )}
+      <AddChildDialog open={addChildOpen} onOpenChange={setAddChildOpen} />
       <Drawer open={open} onOpenChange={setOpen}>
         {triggerContent && (
           <DrawerTrigger asChild>
@@ -418,11 +416,11 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
             {activeType && (
               <button
                 type="button"
-                onClick={handleBack}
+                onClick={() => setOpen(false)}
                 className="absolute left-4 top-4 text-muted-foreground hover:text-foreground"
                 aria-label="Go back"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <X className="w-5 h-5" />
               </button>
             )}
             <DrawerClose className="absolute right-4 top-4 text-muted-foreground hover:text-foreground" aria-label="Close log drawer">
@@ -431,31 +429,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
           </DrawerHeader>
 
           <div className="p-4 pb-8">
-            {!activeType ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-3">
-                  {logOptions.map((option) => {
-                    const Icon = option.icon
-                    return (
-                      <button
-                        key={option.type}
-                        type="button"
-                        onClick={() => setSelectedType(option.type)}
-                        className={`flex flex-col items-center gap-2 p-4 rounded-2xl ${option.bgColor} hover:opacity-80 transition-opacity`}
-                      >
-                        <Icon className={`w-6 h-6 ${option.color}`} />
-                        <span className="text-xs font-medium text-foreground">{option.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-                {!isEdit && (
-                  <div className="pt-2 border-t border-border">
-                    <AddChildDialog />
-                  </div>
-                )}
-              </div>
-            ) : (
+            {activeType ? (
               <div className="space-y-6">
                 {renderLogForm()}
                 {validationError && (
@@ -471,6 +445,10 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                 >
                   {isSaving ? "Saving..." : isEdit ? "Update Entry" : "Save Entry"}
                 </Button>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-border bg-card/50 p-4 text-center">
+                <p className="text-sm text-muted-foreground">Choose an action from the center + menu to start logging.</p>
               </div>
             )}
           </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ParentingRings } from "@/components/parenting-rings"
 import { DailyTimeline } from "@/components/daily-timeline"
 import { GrowthChart } from "@/components/growth-chart"
@@ -316,14 +316,14 @@ export default function HomePage() {
                   <p className="text-xs text-muted-foreground">Last Weight</p>
                   <p className="text-2xl font-semibold text-foreground">
                     {growthData[growthData.length - 1]?.weight || "-"}{" "}
-                    <span className="text-sm font-normal text-muted-foreground">kg</span>
+                    <span className="text-sm font-normal text-muted-foreground">lb</span>
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-card/50 border border-border">
                   <p className="text-xs text-muted-foreground">Last Height</p>
                   <p className="text-2xl font-semibold text-foreground">
                     {growthData[growthData.length - 1]?.height || "-"}{" "}
-                    <span className="text-sm font-normal text-muted-foreground">cm</span>
+                    <span className="text-sm font-normal text-muted-foreground">in</span>
                   </p>
                 </div>
               </div>
@@ -337,7 +337,7 @@ export default function HomePage() {
                   <div key={entry.id ?? entry.date} className="flex items-center justify-between p-3 rounded-2xl bg-card/50 border border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {entry.weight ?? "-"} kg · {entry.height ?? "-"} cm
+                        {entry.weight ?? "-"} lb · {entry.height ?? "-"} in
                       </p>
                       <p className="text-xs text-muted-foreground">{entry.date}</p>
                     </div>
