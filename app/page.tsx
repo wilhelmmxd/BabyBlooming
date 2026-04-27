@@ -241,7 +241,7 @@ export default function HomePage() {
 
     const timer = window.setTimeout(() => {
       setShowSplash(false)
-    }, 700)
+    }, 2000)
 
     return () => window.clearTimeout(timer)
   }, [authLoading, childrenLoading])
