@@ -20,6 +20,7 @@ import { FloatingActionMenu } from "@/components/floating-action-menu"
 import { useLogs } from "@/lib/logs-context"
 import { useAuth } from "@/lib/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { DIARY_TAGS, getDiaryTagStyle } from "@/lib/diary-tags"
 
 type LogType = "feeding" | "sleep" | "play" | "growth" | "diary"
 
@@ -63,8 +64,6 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
   const [validationError, setValidationError] = useState<string | null>(null)
   const isEdit = Boolean(initialLog)
   const activeType = selectedType ?? initialLog?.type ?? null
-
-  const availableTags = ["Health", "Milestone", "Appointment", "Behavior", "Memory"]
 
   const resetForm = () => {
     setSelectedType(null)
@@ -333,7 +332,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
             <div className="space-y-2">
               <Label htmlFor="diary-tags" className="text-sm text-muted-foreground">Tags</Label>
               <div id="diary-tags" className="flex flex-wrap gap-2">
-                {availableTags.map((tag) => (
+                {DIARY_TAGS.map((tag) => (
                   <button
                     key={tag}
                     type="button"
@@ -344,10 +343,7 @@ export function LogDrawer({ trigger, initialLog }: LogDrawerProps) {
                           : [...diaryTags, tag]
                       )
                     }}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${diaryTags.includes(tag)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      }`}
+                    className={`border px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${getDiaryTagStyle(tag, diaryTags.includes(tag))}`}
                   >
                     {tag}
                   </button>
