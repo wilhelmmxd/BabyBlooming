@@ -1,17 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { AnimatePresence } from "framer-motion"
 import { ParentingRings } from "@/components/parenting-rings"
 import { DailyTimeline } from "@/components/daily-timeline"
 import { GrowthChart } from "@/components/growth-chart"
 import { DiaryJournal } from "@/components/diary-journal"
 import { AgesStages } from "@/components/ages-stages"
+import { TipsForToday } from "@/components/tips-for-today"
 import { PresenceMode } from "@/components/presence-mode"
+import { PresenceIndicator } from "@/components/presence-indicator"
 import { LogDrawer } from "@/components/log-drawer"
+import { SettingsMenu } from "@/components/settings-menu"
 import { BottomNav } from "@/components/bottom-nav"
 import { FirstChildSetup } from "@/components/first-child-setup"
 import { EditChildDialog } from "@/components/edit-child-dialog"
-import { Baby, Bell, LogOut, Check, ChevronDown, Pencil, Trash2, Settings, AlertCircle } from "lucide-react"
+import { SplashScreen } from "@/components/splash-screen"
+import { Baby, LogOut, Check, ChevronDown, Pencil, Trash2, AlertCircle, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -231,6 +236,17 @@ export default function HomePage() {
   const { children, activeChild, setActiveChild, loading: childrenLoading, deleteChild } = useChildren()
   const { timelineEntries, diaryEntries, growthData, loading: logsLoading, sleepProgress, feedingProgress, presenceProgress, sleepGoal, feedingGoal, presenceGoal, sleepCount, feedingCount, presenceCount, deleteLog } = useLogs()
   const [activeTab, setActiveTab] = useState("home")
+  const [showSplash, setShowSplash] = useState(true)
+
+  useEffect(() => {
+    if (authLoading || childrenLoading) return
+
+    const timer = window.setTimeout(() => {
+      setShowSplash(false)
+    }, 1200)
+
+    return () => window.clearTimeout(timer)
+  }, [authLoading, childrenLoading])
   const handleDeleteChild = async (childId: string) => {
     const confirmed = window.confirm("Delete this child profile?")
     if (!confirmed) return
@@ -244,16 +260,15 @@ export default function HomePage() {
     await deleteLog(logId)
   }
 
-  if (authLoading || childrenLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    )
-  }
-
   if (!user) {
-    return <LoginForm />
+    return (
+      <>
+        <AnimatePresence>
+          {showSplash && <SplashScreen key="splash" />}
+        </AnimatePresence>
+        <LoginForm />
+      </>
+    )
   }
 
   const renderContent = () => {
@@ -305,14 +320,14 @@ export default function HomePage() {
                   <p className="text-xs text-muted-foreground">Last Weight</p>
                   <p className="text-2xl font-semibold text-foreground">
                     {growthData[growthData.length - 1]?.weight || "-"}{" "}
-                    <span className="text-sm font-normal text-muted-foreground">kg</span>
+                    <span className="text-sm font-normal text-muted-foreground">lb</span>
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-card/50 border border-border">
                   <p className="text-xs text-muted-foreground">Last Height</p>
                   <p className="text-2xl font-semibold text-foreground">
                     {growthData[growthData.length - 1]?.height || "-"}{" "}
-                    <span className="text-sm font-normal text-muted-foreground">cm</span>
+                    <span className="text-sm font-normal text-muted-foreground">in</span>
                   </p>
                 </div>
               </div>
@@ -326,7 +341,7 @@ export default function HomePage() {
                   <div key={entry.id ?? entry.date} className="flex items-center justify-between p-3 rounded-2xl bg-card/50 border border-border">
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {entry.weight ?? "-"} kg · {entry.height ?? "-"} cm
+                        {entry.weight ?? "-"} lb · {entry.height ?? "-"} in
                       </p>
                       <p className="text-xs text-muted-foreground">{entry.date}</p>
                     </div>
@@ -375,21 +390,7 @@ export default function HomePage() {
         return (
           <div className="space-y-6">
             <AgesStages />
-            <section className="space-y-3">
-              <h3 className="text-sm font-medium text-muted-foreground px-1">Tips for Today</h3>
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30">
-                <h4 className="text-sm font-semibold text-foreground mb-2">Tummy Time Tip</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Try placing a colorful toy just out of reach during tummy time. This encourages your baby to lift their head and eventually reach for the toy, strengthening their neck and arm muscles.
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-ring-feeding/20 to-ring-feeding/5 border border-ring-feeding/30">
-                <h4 className="text-sm font-semibold text-foreground mb-2">Sleep Schedule</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  At 4-6 months, most babies need 14-16 hours of sleep per day, including 2-3 naps. Watch for sleep cues like yawning and eye rubbing.
-                </p>
-              </div>
-            </section>
+            <TipsForToday />
           </div>
         )
 
@@ -400,9 +401,12 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background pb-24">
+      <AnimatePresence>
+        {showSplash && <SplashScreen key="splash" />}
+      </AnimatePresence>
       {/* Header */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="flex items-center justify-between px-4 py-3 max-w-md mx-auto">
+        <div className="flex items-center justify-between px-4 py-3 pt-4 max-w-md mx-auto" style={{ paddingTop: `calc(env(safe-area-inset-top, 0px) + 1rem)` }}>
           <div className="flex items-center group">
             {children.length > 0 ? (
               <DropdownMenu>
@@ -418,21 +422,29 @@ export default function HomePage() {
                     <ChevronDown className="w-4 h-4 text-muted-foreground" />
                   </button>
                 </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {children.map((child) => (
-                  <div key={child.id} className="group flex items-center">
+              <DropdownMenuContent align="start" className="w-56 p-1.5">
+                {children.map((child, index) => (
+                  <div
+                    key={child.id}
+                    className={`group flex items-center rounded-lg ${index < children.length - 1 ? "mb-1 border-b border-border/60 pb-1" : ""}`}
+                  >
                     <DropdownMenuItem
                       onClick={() => setActiveChild(child)}
-                      className="cursor-pointer flex-1 flex items-center justify-between"
+                      className={`cursor-pointer h-11 flex-1 flex items-center justify-between rounded-md px-2.5 ${activeChild?.id === child.id ? "bg-primary/10" : ""}`}
                     >
-                      <span>{child.name}</span>
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                          {child.name.charAt(0).toUpperCase()}
+                        </span>
+                        <span className="truncate">{child.name}</span>
+                      </div>
                       {activeChild?.id === child.id && <Check className="w-4 h-4" />}
                     </DropdownMenuItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="mr-1 h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="mr-1 h-10 w-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground opacity-60 group-hover:opacity-100 transition-opacity"
                           onClick={(event) => event.stopPropagation()}
                           onPointerDown={(event) => event.stopPropagation()}
                           aria-label="Child settings"
@@ -476,13 +488,11 @@ export default function HomePage() {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="Notifications">
-              <Bell className="w-5 h-5" />
-            </Button>
+            <SettingsMenu />
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-muted-foreground"
+              className="h-11 w-11 text-muted-foreground touch-manipulation"
               onClick={logout}
               aria-label="Sign out"
             >
@@ -509,6 +519,9 @@ export default function HomePage() {
 
       {/* First Child Setup Modal */}
       <FirstChildSetup />
+
+      {/* Presence Mode Indicator */}
+      <PresenceIndicator />
     </main>
   )
 }

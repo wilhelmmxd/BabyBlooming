@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import { useChildren } from "@/lib/children-context"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -16,7 +16,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Plus, AlertCircle } from "lucide-react"
 
-export function AddChildDialog() {
+interface AddChildDialogProps {
+  trigger?: ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function AddChildDialog({ trigger, open, onOpenChange }: AddChildDialogProps) {
   const { addChild } = useChildren()
   const { toast } = useToast()
   const [childName, setChildName] = useState("")
@@ -24,7 +30,11 @@ export function AddChildDialog() {
   const [sex, setSex] = useState<"male" | "female" | "">("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const [isOpen, setIsOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+
+  const isControlled = open !== undefined && onOpenChange !== undefined
+  const isOpen = isControlled ? open : internalOpen
+  const setIsOpen = isControlled ? onOpenChange : setInternalOpen
 
   const handleAddChild = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -95,16 +105,22 @@ export function AddChildDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="h-9 gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Add Child
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        trigger ? (
+          <DialogTrigger asChild>{trigger}</DialogTrigger>
+        ) : (
+          <DialogTrigger asChild>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-9 gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Child
+            </Button>
+          </DialogTrigger>
+        )
+      )}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add Another Child</DialogTitle>
@@ -123,6 +139,8 @@ export function AddChildDialog() {
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
               placeholder="e.g., Emma"
+              autoComplete="name"
+              enterKeyHint="next"
               className="h-10"
             />
           </div>
@@ -136,6 +154,7 @@ export function AddChildDialog() {
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
+              enterKeyHint="done"
               className="h-10"
             />
           </div>
