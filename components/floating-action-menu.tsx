@@ -33,10 +33,10 @@ export function FloatingActionMenu({
   const isBottomNavAnchor = anchorSelector === "#bottom-nav"
 
   const positions = useMemo(() => {
-    const radius = 116
-    const arc = 170
-    const horizontalSpread = 1.08
-    const verticalLift = 1.2
+    const radius = 84
+    const arc = 140
+    const horizontalSpread = 0.95
+    const verticalLift = 1.0
     const startAngle = 90 - arc / 2
     const step = actions.length > 1 ? arc / (actions.length - 1) : 0
 
@@ -131,7 +131,7 @@ export function FloatingActionMenu({
             <motion.button
               type="button"
               aria-label="Close actions"
-              className="fixed inset-0 z-40 cursor-default bg-transparent"
+              className="fixed inset-0 z-40 cursor-default bg-black/20 backdrop-blur-sm"
               onClick={() => onOpenChange(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -153,15 +153,15 @@ export function FloatingActionMenu({
                     role="menuitem"
                     onClick={() => handleActionClick(action)}
                     className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    initial={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.85, x: 0, y: 0 }}
                     animate={{ opacity: 1, scale: 1, x: position.x, y: position.y }}
-                    exit={{ opacity: 0, scale: 0.8, x: 0, y: 0 }}
-                    transition={{ duration: 0.25, ease: "easeOut", delay: index * 0.04 }}
+                    exit={{ opacity: 0, scale: 0.85, x: 0, y: 0 }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1], delay: index * 0.03 }}
                   >
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-card border border-border text-foreground shadow-lg">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border text-foreground shadow-lg">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="text-[10px] font-medium text-foreground/80">{action.label}</span>
+                    <span className="text-xs font-medium text-foreground/80">{action.label}</span>
                   </motion.button>
                 )
               })}
