@@ -15,9 +15,12 @@ interface PresenceSession {
 
 interface PresenceContextType {
   session: PresenceSession | null
+  isFullscreen: boolean
   startSession: (durationMinutes: number) => void
   pauseSession: () => void
   resumeSession: () => void
+  minimizeSession: () => void
+  openSession: () => void
   stopSession: () => void
   completeSession: () => Promise<void>
 }
@@ -26,6 +29,7 @@ const PresenceContext = createContext<PresenceContextType | undefined>(undefined
 
 export function PresenceProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<PresenceSession | null>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const { addLog } = useLogs()
   const { activeChild } = useChildren()
 
@@ -39,6 +43,7 @@ export function PresenceProvider({ children }: { children: React.ReactNode }) {
       isComplete: false,
     }
     setSession(newSession)
+    setIsFullscreen(true)
   }, [])
 
   const pauseSession = useCallback(() => {
@@ -49,8 +54,17 @@ export function PresenceProvider({ children }: { children: React.ReactNode }) {
     setSession((prev) => prev ? { ...prev, isRunning: true } : null)
   }, [])
 
+  const minimizeSession = useCallback(() => {
+    setIsFullscreen(false)
+  }, [])
+
+  const openSession = useCallback(() => {
+    setIsFullscreen(true)
+  }, [])
+
   const stopSession = useCallback(() => {
     setSession(null)
+    setIsFullscreen(false)
   }, [])
 
   const completeSession = useCallback(async () => {
@@ -67,6 +81,7 @@ export function PresenceProvider({ children }: { children: React.ReactNode }) {
       setSession((prev) =>
         prev ? { ...prev, isRunning: false, isComplete: true } : null
       )
+      setIsFullscreen(false)
     } catch (error) {
       console.error("Failed to log presence session:", error)
     }
@@ -104,9 +119,12 @@ export function PresenceProvider({ children }: { children: React.ReactNode }) {
     <PresenceContext.Provider
       value={{
         session,
+        isFullscreen,
         startSession,
         pauseSession,
         resumeSession,
+        minimizeSession,
+        openSession,
         stopSession,
         completeSession,
       }}

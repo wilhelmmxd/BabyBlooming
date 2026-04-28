@@ -28,6 +28,7 @@ import {
 import { useAuth } from "@/lib/auth-context"
 import { useChildren } from "@/lib/children-context"
 import { useLogs } from "@/lib/logs-context"
+import { usePresence } from "@/lib/presence-context"
 import { useToast } from "@/hooks/use-toast"
 
 // Login form component
@@ -235,6 +236,7 @@ export default function HomePage() {
   const { user, logout, loading: authLoading } = useAuth()
   const { children, activeChild, setActiveChild, loading: childrenLoading, deleteChild } = useChildren()
   const { timelineEntries, diaryEntries, growthData, loading: logsLoading, sleepProgress, feedingProgress, presenceProgress, sleepGoal, feedingGoal, presenceGoal, sleepCount, feedingCount, presenceCount, deleteLog } = useLogs()
+  const { session: presenceSession, isFullscreen: isPresenceFullscreen } = usePresence()
   const [activeTab, setActiveTab] = useState("home")
   const [showSplash, setShowSplash] = useState(true)
 
@@ -512,7 +514,7 @@ export default function HomePage() {
       </div>
 
       {/* Log Button */}
-      <LogDrawer />
+      {!(presenceSession && !presenceSession.isComplete && isPresenceFullscreen) && <LogDrawer />}
 
       {/* Bottom Navigation */}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />

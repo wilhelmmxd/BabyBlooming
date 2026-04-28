@@ -6,9 +6,9 @@ import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function PresenceIndicator() {
-  const { session, pauseSession, resumeSession, stopSession } = usePresence()
+  const { session, isFullscreen, pauseSession, resumeSession, stopSession, openSession } = usePresence()
 
-  if (!session) return null
+  if (!session || session.isComplete || isFullscreen) return null
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -27,7 +27,19 @@ export function PresenceIndicator() {
         exit={{ opacity: 0, y: 10 }}
         className="fixed bottom-24 right-4 z-40 max-w-xs"
       >
-        <div className="bg-card border border-ring-presence/40 rounded-3xl p-3 shadow-lg shadow-ring-presence/10 backdrop-blur-sm">
+        <div
+          className="bg-card border border-ring-presence/40 rounded-3xl p-3 shadow-lg shadow-ring-presence/10 backdrop-blur-sm"
+          onClick={openSession}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault()
+              openSession()
+            }
+          }}
+          aria-label="Open presence mode"
+        >
           <div className="flex items-center gap-3">
             {/* Progress circle */}
             <div className="relative w-12 h-12 flex-shrink-0">
@@ -70,7 +82,14 @@ export function PresenceIndicator() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-ring-presence hover:bg-ring-presence/10"
-                onClick={session.isRunning ? pauseSession : resumeSession}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  if (session.isRunning) {
+                    pauseSession()
+                    return
+                  }
+                  resumeSession()
+                }}
                 aria-label={session.isRunning ? "Pause" : "Resume"}
               >
                 {session.isRunning ? (
@@ -88,7 +107,10 @@ export function PresenceIndicator() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                onClick={stopSession}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  stopSession()
+                }}
                 aria-label="Close"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

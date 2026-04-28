@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Heart, Play, Pause, X } from "lucide-react"
+import { Heart, Play, Pause, Square, X } from "lucide-react"
 import { usePresence } from "@/lib/presence-context"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
@@ -26,7 +26,16 @@ const PRESETS = [
 ]
 
 export function PresenceMode() {
-  const { session, startSession, pauseSession, resumeSession, stopSession, completeSession } = usePresence()
+  const {
+    session,
+    isFullscreen,
+    startSession,
+    pauseSession,
+    resumeSession,
+    minimizeSession,
+    stopSession,
+    completeSession,
+  } = usePresence()
   const [showDialog, setShowDialog] = useState(false)
   const [customMinutes, setCustomMinutes] = useState(15)
   const [affirmation, setAffirmation] = useState(AFFIRMATIONS[0])
@@ -55,8 +64,8 @@ export function PresenceMode() {
     }, 3000)
   }
 
-  // Show full screen during active session
-  if (session?.isRunning) {
+  // Show full screen for active session (running or paused)
+  if (session && !session.isComplete && isFullscreen) {
     const progress = (session.elapsedTime / session.targetDuration) * 100
     const timeRemaining = session.targetDuration - session.elapsedTime
 
@@ -143,7 +152,16 @@ export function PresenceMode() {
               size="icon"
               className="h-14 w-14 rounded-full"
               onClick={stopSession}
-              aria-label="Exit"
+              aria-label="Stop"
+            >
+              <Square className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-14 w-14 rounded-full"
+              onClick={minimizeSession}
+              aria-label="Minimize"
             >
               <X className="w-6 h-6" />
             </Button>
