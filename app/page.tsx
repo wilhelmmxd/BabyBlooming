@@ -9,6 +9,7 @@ import { DiaryJournal } from "@/components/diary-journal"
 import { AgesStages } from "@/components/ages-stages"
 import { TipsForToday } from "@/components/tips-for-today"
 import { PresenceMode } from "@/components/presence-mode"
+import { PresenceIndicator } from "@/components/presence-indicator"
 import { LogDrawer } from "@/components/log-drawer"
 import { SettingsMenu } from "@/components/settings-menu"
 import { BottomNav } from "@/components/bottom-nav"
@@ -518,6 +519,9 @@ export default function HomePage() {
 
       {/* First Child Setup Modal */}
       <FirstChildSetup />
+
+      {/* Presence Mode Indicator */}
+      <PresenceIndicator />
     </main>
   )
 }

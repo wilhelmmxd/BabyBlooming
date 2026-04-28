@@ -6,6 +6,7 @@ import { AuthProvider } from '@/lib/auth-context'
 import { ChildrenProvider } from '@/lib/children-context'
 import { SettingsProvider } from '@/lib/settings-context'
 import { LogsProvider } from '@/lib/logs-context'
+import { PresenceProvider } from '@/lib/presence-context'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Toaster } from '@/components/ui/toaster'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -58,8 +59,10 @@ export default function RootLayout({
               <ChildrenProvider>
                 <SettingsProvider>
                   <LogsProvider>
-                    {children}
-                    <Analytics />
+                    <PresenceProvider>
+                      {children}
+                      <Analytics />
+                    </PresenceProvider>
                   </LogsProvider>
                 </SettingsProvider>
               </ChildrenProvider>
