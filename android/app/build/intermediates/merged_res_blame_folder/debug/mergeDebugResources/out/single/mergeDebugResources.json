@@ -68,6 +68,10 @@
         "source": "com.babyblooming.app-main-30:/drawable/splash.png"
     },
     {
+        "merged": "com.babyblooming.app-debug-28:/xml_config_2.xml.flat",
+        "source": "com.babyblooming.app-main-30:/xml/config_2.xml"
+    },
+    {
         "merged": "com.babyblooming.app-debug-28:/layout_activity_main.xml.flat",
         "source": "com.babyblooming.app-main-30:/layout/activity_main.xml"
     },
