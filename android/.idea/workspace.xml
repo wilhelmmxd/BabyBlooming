@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bd7eb894-05a4-46d8-8a5d-8070aae1f313" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/config.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/debug/mergeDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/debug/mergeDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-debug-report.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/3fcf0ca3db277ad8.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/404b956fea4aa6df.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/8d7ddadba7238592.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/91ccb2f74c19539c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/a6dad97d9634a72d.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/a99ffd198dec319e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/aaf4b3273d25d429.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/b1f236fb874c01b1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/d0cc8eeff024fc41.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/d8ab7be654843499.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/chunks/turbopack-407e4f3ac9e0605e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/1bffadaabf893a1e-s.7cd81963.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/2bbe8d2671613f1f-s.76dcb0b2.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/2c55a0e60120577a-s.2a48534a.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/5476f68d60460930-s.c995e352.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/9c72aa0f40e4eef8-s.18a48cbc.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/media/ad66f9afd8947f86-s.7a40eb73.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/yj_B407f1qaXJswBsQ3Ys/_buildManifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/yj_B407f1qaXJswBsQ3Ys/_clientMiddlewareManifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_next/static/yj_B407f1qaXJswBsQ3Ys/_ssgManifest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._full.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._head.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._index.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._not-found.__PAGE__.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._not-found.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/public/_not-found/__next._tree.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capacitor-cordova-android-plugins/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/capacitor-cordova-android-plugins/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=/Users/danielvega/.android/avd/Pixel_9.avd]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="3D0TYK9sM17VPWWC7qKzFU5VZoT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.app.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "DanielBranch",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="android.app" />
+      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
+      <option name="RESTORE_FRESH_INSTALL_ONLY" value="false" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bd7eb894-05a4-46d8-8a5d-8070aae1f313" name="Changes" comment="" />
+      <created>1777418033820</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777418033820</updated>
+    </task>
+    <servers />
+  </component>
+</project>
